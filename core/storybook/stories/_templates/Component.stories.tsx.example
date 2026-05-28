@@ -1,0 +1,23 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { ComponentName } from '@org/core';
+
+const meta = {
+  title: 'UI/ComponentName',
+  component: ComponentName,
+  args: {
+    // propName: 'value',
+  },
+} satisfies Meta<typeof ComponentName>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+
+export const Variant: Story = {
+  args: {
+    // propName: 'another value',
+  },
+};

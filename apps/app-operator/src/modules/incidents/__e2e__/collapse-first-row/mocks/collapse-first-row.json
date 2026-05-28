@@ -1,0 +1,243 @@
+{
+  "entries": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:5173/api/incidentsTree",
+        "queryString": [],
+        "headers": {
+          "Host": "127.0.0.1:5173",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0.2) Gecko/20100101 Firefox/150.0.2",
+          "Accept": "application/json, text/plain, */*",
+          "Accept-Language": "en-US",
+          "Accept-Encoding": "gzip, deflate, br, zstd",
+          "Connection": "keep-alive",
+          "Referer": "http://127.0.0.1:5173/incidents",
+          "Sec-Fetch-Dest": "empty",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Site": "same-origin"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "contentType": "application/json; charset=utf-8",
+        "headers": {
+          "vary": "Accept-Encoding",
+          "x-powered-by": "Express",
+          "access-control-allow-credentials": "true",
+          "cache-control": "no-cache",
+          "pragma": "no-cache",
+          "expires": "-1",
+          "x-content-type-options": "nosniff",
+          "content-type": "application/json; charset=utf-8",
+          "etag": "W/\"ccf-xsCZPpJcKgs+/noC93S+fpw1dZM\"",
+          "content-encoding": "br",
+          "date": "28 May 2026 11:36:10 GMT",
+          "connection": "close",
+          "Transfer-Encoding": "chunked"
+        },
+        "body": {
+          "defaultExpandedRowKeys": [
+            "azs",
+            "block-1",
+            "tg",
+            "steam-turbine",
+            "block-2"
+          ],
+          "items": [
+            {
+              "id": "azs",
+              "name": "АЗС",
+              "cmState": "active",
+              "totalIncidents": 350,
+              "children": [
+                {
+                  "id": "block-1",
+                  "name": "Блок 1",
+                  "cmState": "active",
+                  "totalIncidents": 120,
+                  "children": [
+                    {
+                      "id": "tg",
+                      "name": "ТГ",
+                      "cmState": "active",
+                      "criticality": "high",
+                      "incidentState": "model",
+                      "malfunction": "ПОДШ",
+                      "deadline": "18.12.2022 18:00",
+                      "durationDays": 38,
+                      "totalIncidents": 20,
+                      "children": [
+                        {
+                          "id": "steam-turbine",
+                          "name": "Паровая турбина",
+                          "cmState": "active",
+                          "criticality": "high",
+                          "incidentState": "equipment",
+                          "malfunction": "Дисбаланс",
+                          "deadline": "20.12.2022 12:00",
+                          "durationDays": 36,
+                          "totalIncidents": 8,
+                          "children": [
+                            {
+                              "id": "temp",
+                              "name": "Температурная",
+                              "cmState": "active",
+                              "criticality": "medium",
+                              "incidentState": "sensor",
+                              "malfunction": "Проблема системы смазки",
+                              "deadline": "22.12.2022 09:00",
+                              "durationDays": 34,
+                              "totalIncidents": 3
+                            },
+                            {
+                              "id": "vibration",
+                              "name": "Вибрационная",
+                              "cmState": "active",
+                              "criticality": "low",
+                              "incidentState": "model",
+                              "malfunction": "ПОДШ",
+                              "deadline": "25.12.2022 15:00",
+                              "durationDays": 31,
+                              "totalIncidents": 2
+                            }
+                          ]
+                        },
+                        {
+                          "id": "generator",
+                          "name": "Генератор",
+                          "cmState": "active",
+                          "criticality": "medium",
+                          "incidentState": "equipment",
+                          "malfunction": "Дисбаланс",
+                          "deadline": "19.12.2022 10:00",
+                          "durationDays": 37,
+                          "totalIncidents": 5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "block-2",
+                  "name": "Блок 2",
+                  "cmState": "active",
+                  "totalIncidents": 85,
+                  "children": [
+                    {
+                      "id": "block-2-tg",
+                      "name": "ТГ",
+                      "cmState": "active",
+                      "criticality": "low",
+                      "incidentState": "sensor",
+                      "malfunction": "ПОДШ",
+                      "deadline": "28.12.2022 14:00",
+                      "durationDays": 28,
+                      "totalIncidents": 12
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:5173/api/incidentsTree?criticality=high",
+        "queryString": [
+          {
+            "name": "criticality",
+            "value": "high"
+          }
+        ],
+        "headers": {
+          "Host": "127.0.0.1:5173",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0.2) Gecko/20100101 Firefox/150.0.2",
+          "Accept": "application/json, text/plain, */*",
+          "Accept-Language": "en-US",
+          "Accept-Encoding": "gzip, deflate, br, zstd",
+          "Connection": "keep-alive",
+          "Referer": "http://127.0.0.1:5173/incidents",
+          "Sec-Fetch-Dest": "empty",
+          "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Site": "same-origin"
+        }
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "contentType": "application/json; charset=utf-8",
+        "headers": {
+          "vary": "Accept-Encoding",
+          "x-powered-by": "Express",
+          "access-control-allow-credentials": "true",
+          "cache-control": "no-cache",
+          "pragma": "no-cache",
+          "expires": "-1",
+          "x-content-type-options": "nosniff",
+          "content-type": "application/json; charset=utf-8",
+          "etag": "W/\"506-ALJ3MBb/OWFT/oJDFzHyKgEUJ6E\"",
+          "content-encoding": "br",
+          "date": "28 May 2026 11:36:11 GMT",
+          "connection": "close",
+          "Transfer-Encoding": "chunked"
+        },
+        "body": {
+          "defaultExpandedRowKeys": [
+            "azs",
+            "block-1",
+            "tg",
+            "steam-turbine",
+            "block-2"
+          ],
+          "items": [
+            {
+              "id": "azs",
+              "name": "АЗС",
+              "cmState": "active",
+              "totalIncidents": 350,
+              "children": [
+                {
+                  "id": "block-1",
+                  "name": "Блок 1",
+                  "cmState": "active",
+                  "totalIncidents": 120,
+                  "children": [
+                    {
+                      "id": "tg",
+                      "name": "ТГ",
+                      "cmState": "active",
+                      "criticality": "high",
+                      "incidentState": "model",
+                      "malfunction": "ПОДШ",
+                      "deadline": "18.12.2022 18:00",
+                      "durationDays": 38,
+                      "totalIncidents": 20,
+                      "children": [
+                        {
+                          "id": "steam-turbine",
+                          "name": "Паровая турбина",
+                          "cmState": "active",
+                          "criticality": "high",
+                          "incidentState": "equipment",
+                          "malfunction": "Дисбаланс",
+                          "deadline": "20.12.2022 12:00",
+                          "durationDays": 36,
+                          "totalIncidents": 8
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

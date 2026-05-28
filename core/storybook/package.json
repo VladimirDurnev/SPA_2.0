@@ -1,0 +1,20 @@
+{
+  "name": "@org/core-storybook",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build",
+    "test": "storybook build"
+  },
+  "dependencies": {
+    "@org/core": "0.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "^9.0.0"
+  }
+}
+
