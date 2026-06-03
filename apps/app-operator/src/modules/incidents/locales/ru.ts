@@ -56,7 +56,9 @@ export const incidentsRu = {
   errors: {
     loadFailed: 'Не удалось загрузить инциденты',
     filterFailed: 'Не удалось отфильтровать инциденты',
+    invalidResponse: 'API вернул данные в неожиданном формате',
     loadFallback: 'Ошибка загрузки',
     filterFallback: 'Ошибка фильтрации',
+    notificationTitle: 'Ошибка инцидентов',
   },
 } as const;

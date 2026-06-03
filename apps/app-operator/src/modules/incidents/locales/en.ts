@@ -56,7 +56,9 @@ export const incidentsEn = {
   errors: {
     loadFailed: 'Failed to load incidents',
     filterFailed: 'Failed to filter incidents',
+    invalidResponse: 'API returned data in an unexpected format',
     loadFallback: 'Load error',
     filterFallback: 'Filter error',
+    notificationTitle: 'Incidents error',
   },
 } as const;

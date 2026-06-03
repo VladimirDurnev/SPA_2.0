@@ -9,8 +9,6 @@ import {
 } from '../../selectors/chartsSelectors';
 import { translateDonutChartData } from '../../utils/translateChartData';
 
-import { ChartError } from './styles';
-
 export function DurationDonutChart() {
   const { t, i18n } = useTranslation('incidents');
   const isReady = useAppSelector(selectChartsReady);
@@ -19,15 +17,6 @@ export function DurationDonutChart() {
     () => translateDonutChartData(rawData, t),
     [rawData, t, i18n.language],
   );
-  const errorKey = useAppSelector((state) => state.incidents.error);
-
-  if (errorKey) {
-    return (
-      <ChartError role="alert">
-        {t(errorKey)}
-      </ChartError>
-    );
-  }
 
   if (!isReady) {
     return null;

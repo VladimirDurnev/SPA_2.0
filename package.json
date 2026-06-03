@@ -91,7 +91,8 @@
     "react-i18next": "^15.0.0",
     "react-redux": "^9.1.0",
     "react-router": "^7.0.0",
-    "styled-components": "^6.1.0"
+    "styled-components": "^6.1.0",
+    "zod": "^4.4.3"
   },
   "resolutions": {
     "react": "^19.0.0",

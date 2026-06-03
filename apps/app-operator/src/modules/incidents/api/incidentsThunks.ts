@@ -5,8 +5,14 @@ import type { RootState } from '@/app/store/types';
 import { http } from '@org/core';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ZodError } from 'zod';
 import { INCIDENTS_TREE_API } from '../constants';
 import { filterTreeByCriticality } from '../utils/filterIncidentsTree';
+import { parseIncidentsTreeResponse } from './incidentsSchemas';
+
+function mapIncidentsApiError(error: unknown, fallbackKey: string) {
+  return error instanceof ZodError ? 'errors.invalidResponse' : fallbackKey;
+}
 
 export const fetchIncidentsTreeThunk = createAsyncThunk<
   IncidentsTreeResponse,
@@ -16,11 +22,11 @@ export const fetchIncidentsTreeThunk = createAsyncThunk<
   'incidents/fetchTree',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await http.get<IncidentsTreeResponse>(INCIDENTS_TREE_API);
-      return data;
+      const { data } = await http.get<unknown>(INCIDENTS_TREE_API);
+      return parseIncidentsTreeResponse(data);
     }
-    catch {
-      return rejectWithValue('errors.loadFailed');
+    catch (error) {
+      return rejectWithValue(mapIncidentsApiError(error, 'errors.loadFailed'));
     }
   },
 );
@@ -43,13 +49,15 @@ export const fetchIncidentsByCriticalityThunk = createAsyncThunk<
       let allItems = cachedAllItems;
 
       if (!allItems.length) {
-        const { data: full } = await http.get<IncidentsTreeResponse>(INCIDENTS_TREE_API);
+        const { data: fullResponse } = await http.get<unknown>(INCIDENTS_TREE_API);
+        const full = parseIncidentsTreeResponse(fullResponse);
         allItems = full.items;
       }
 
-      const { data } = await http.get<IncidentsTreeResponse>(INCIDENTS_TREE_API, {
+      const { data: response } = await http.get<unknown>(INCIDENTS_TREE_API, {
         params: { criticality },
       });
+      const data = parseIncidentsTreeResponse(response);
 
       const items = data.items.length > 0
         ? data.items
@@ -60,8 +68,8 @@ export const fetchIncidentsByCriticalityThunk = createAsyncThunk<
         allItems: cachedAllItems.length ? undefined : allItems,
       };
     }
-    catch {
-      return rejectWithValue('errors.filterFailed');
+    catch (error) {
+      return rejectWithValue(mapIncidentsApiError(error, 'errors.filterFailed'));
     }
   },
 );

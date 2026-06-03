@@ -126,5 +126,6 @@ npm run lint
 ## См. Также
 
 - `docs/NPM_WORKSPACES.md`;
+- `docs/ZOD.md`;
 - `FRONTEND_AR.MD`;
 - `core/README.md`.

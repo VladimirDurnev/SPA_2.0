@@ -13,8 +13,6 @@ import {
 import { clearCriticalityFilter } from '../../store/incidentsSlice';
 import { translateDonutChartData } from '../../utils/translateChartData';
 
-import { ChartError } from './styles';
-
 export function CriticalityDonutChart() {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation('incidents');
@@ -24,7 +22,6 @@ export function CriticalityDonutChart() {
     () => translateDonutChartData(rawData, t),
     [rawData, t, i18n.language],
   );
-  const errorKey = useAppSelector((state) => state.incidents.error);
   const activeFilter = useAppSelector((state) => state.incidents.criticalityFilter);
 
   const handleLegendClick = (item: DonutChartLegendItem) => {
@@ -37,14 +34,6 @@ export function CriticalityDonutChart() {
 
     void dispatch(fetchIncidentsByCriticalityThunk(filter));
   };
-
-  if (errorKey) {
-    return (
-      <ChartError role="alert">
-        {t(errorKey)}
-      </ChartError>
-    );
-  }
 
   if (!isReady) {
     return null;

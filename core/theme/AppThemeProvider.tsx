@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import type { ThemeMode } from './types';
 
-import { ConfigProvider } from 'antd';
+import { App as AntdApp, ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
 import ruRU from 'antd/locale/ru_RU';
 import { createContext, useContext, useMemo, useState } from 'react';
@@ -62,8 +62,10 @@ export function AppThemeProvider({ children }: PropsWithChildren) {
     <ThemeModeContext.Provider value={value}>
       <ThemeProvider theme={theme}>
         <ConfigProvider locale={antdLocale} theme={antdTheme}>
-          <GlobalStyles />
-          {children}
+          <AntdApp>
+            <GlobalStyles />
+            {children}
+          </AntdApp>
         </ConfigProvider>
       </ThemeProvider>
     </ThemeModeContext.Provider>
