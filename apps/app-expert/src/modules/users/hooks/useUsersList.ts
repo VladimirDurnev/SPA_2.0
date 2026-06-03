@@ -6,7 +6,7 @@ import { fetchUsersThunk } from '../api/usersThunks';
 
 export function useUsersList() {
   const dispatch = useAppDispatch();
-  const { items, isLoading, error } = useAppSelector((state) => state.users);
+  const { items, isLoading, error } = useAppSelector(state => state.users);
 
   useEffect(() => {
     void dispatch(fetchUsersThunk());

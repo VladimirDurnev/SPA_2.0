@@ -9,11 +9,13 @@ export function UsersTable() {
 
   return (
     <div>
-      {error ? (
-        <div role="alert" style={{ marginBottom: 16, color: '#cf1322' }}>
-          {error}
-        </div>
-      ) : null}
+      {error
+        ? (
+            <div role="alert" style={{ marginBottom: 16, color: '#cf1322' }}>
+              {error}
+            </div>
+          )
+        : null}
       <Table
         rowKey="id"
         columns={usersTableColumns}

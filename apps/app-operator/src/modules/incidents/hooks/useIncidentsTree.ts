@@ -7,7 +7,7 @@ import { fetchIncidentsTreeThunk } from '../api/incidentsThunks';
 /** Загружает дерево один раз, если в store ещё пусто */
 export function useLoadIncidentsTree() {
   const dispatch = useAppDispatch();
-  const hasItems = useAppSelector((state) => state.incidents.items.length > 0);
+  const hasItems = useAppSelector(state => state.incidents.items.length > 0);
 
   useEffect(() => {
     if (!hasItems) {
@@ -17,5 +17,5 @@ export function useLoadIncidentsTree() {
 }
 
 export function useIncidentsTreeState() {
-  return useAppSelector((state) => state.incidents);
+  return useAppSelector(state => state.incidents);
 }

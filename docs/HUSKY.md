@@ -25,21 +25,91 @@ npm run test:run
 ## Файл Hook
 
 ```text
-.husky/pre-push
+.husky/pre-push          ← ваши команды (только этот файл правим)
+.husky/_/pre-push        ← служебный, генерирует Husky, не трогать
 ```
 
-```sh
-#!/usr/bin/env sh
-set -e
-. "$(dirname -- "$0")/_/husky.sh"
+Содержимое `.husky/pre-push`:
 
+```sh
 npm run lint
 npm run lint:styles
 npm run lint:apps-imports
 npm run test:run
 ```
 
-`set -e` — остановка на первой ошибке.
+Git вызывает `.husky/_/pre-push`, тот запускает `.husky/pre-push`.
+
+## Как Проверить, Что Husky Работает
+
+### 1. Git должен знать про hooks
+
+```bash
+git config core.hooksPath
+```
+
+Ожидается:
+
+```text
+.husky/_
+```
+
+Если пусто:
+
+```bash
+npm run prepare
+```
+
+### 2. Файл hook существует
+
+```text
+.husky/pre-push
+```
+
+### 3. Ручной прогон (Windows, Git Bash)
+
+В PowerShell `sh` часто нет — hook всё равно идёт через Git Bash при `git push`.
+
+Проверка вручную:
+
+```bash
+"C:\Program Files\Git\bin\bash.exe" -c "cd /e/spa2.0 && .husky/pre-push"
+```
+
+Должны побежать `lint`, `lint:styles`, `test:run` с выводом в терминал.
+
+### 4. Реальный push
+
+```bash
+git push
+```
+
+Должен быть тот же вывод. **`git push --dry-run` hook не запускает.**
+
+### 5. Почему могло «ничего не быть»
+
+| Причина | Что сделать |
+|---------|-------------|
+| Не делали `npm install` / `npm run prepare` | `npm run prepare` |
+| `git push --no-verify` | push без флага |
+| `HUSKY=0` в окружении | убрать переменную |
+| Push из GUI без hooks | push из терминала |
+| Вывод в другой вкладке IDE | смотреть терминал Git |
+| Hook упал мгновенно до npm | проверить шаг 3 |
+| Ещё не было `.husky/pre-push` при том push | push ещё раз после `prepare` |
+
+### 6. Отключить временно
+
+```bash
+git push --no-verify
+```
+
+или
+
+```bash
+set HUSKY=0
+git push
+```
 
 ## Что Не Гоняем На Push
 

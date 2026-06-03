@@ -1,4 +1,4 @@
-import { Table } from '@org/core'
+import { Table } from '@org/core';
 
 import { USERS_TABLE_PAGE_SIZE } from '../constants';
 import { useUsersList } from '../hooks/useUsersList';
@@ -9,11 +9,13 @@ export function UsersTable() {
 
   return (
     <div>
-      {error ? (
-        <div role="alert" style={{ marginBottom: 16, color: '#cf1322' }}>
-          {error}
-        </div>
-      ) : null}
+      {error
+        ? (
+            <div role="alert" style={{ marginBottom: 16, color: '#cf1322' }}>
+              {error}
+            </div>
+          )
+        : null}
       <Table
         rowKey="id"
         columns={usersTableColumns}

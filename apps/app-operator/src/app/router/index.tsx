@@ -1,5 +1,5 @@
-import type {RouteObject} from 'react-router';
-import { createBrowserRouter  } from 'react-router';
+import type { RouteObject } from 'react-router';
+import { createBrowserRouter } from 'react-router';
 
 import { AppRoute } from './constants';
 

@@ -5,7 +5,7 @@ export function resolveChartSegments(
   chartData: DonutChartSegment[],
   legendData: DonutChartLegendItem[],
 ): DonutChartSegment[] {
-  const legendMap = new Map(legendData.map((item) => [item.id, item]));
+  const legendMap = new Map(legendData.map(item => [item.id, item]));
 
   if (chartData.length > 0) {
     return chartData
@@ -18,15 +18,15 @@ export function resolveChartSegments(
           pattern: segment.pattern ?? legend?.pattern,
         };
       })
-      .filter((segment) => segment.value > 0);
+      .filter(segment => segment.value > 0);
   }
 
   return legendData
-    .map((item) => ({
+    .map(item => ({
       id: item.id,
       value: Number(item.value),
       color: item.color,
       pattern: item.pattern,
     }))
-    .filter((segment) => segment.value > 0);
+    .filter(segment => segment.value > 0);
 }

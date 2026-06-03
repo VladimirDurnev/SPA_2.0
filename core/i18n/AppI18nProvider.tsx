@@ -46,7 +46,7 @@ export function AppI18nProvider({ children, modules = [] }: AppI18nProviderProps
   const value = useMemo<LocaleContextValue>(() => ({
     locale,
     setLocale: setLocaleState,
-    toggleLocale: () => setLocaleState((current) => (current === 'ru' ? 'en' : 'ru')),
+    toggleLocale: () => setLocaleState(current => (current === 'ru' ? 'en' : 'ru')),
   }), [locale]);
 
   if (!ready) {

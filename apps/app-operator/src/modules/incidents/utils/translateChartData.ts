@@ -5,7 +5,7 @@ export function translateDonutChartData(
   data: DonutChartData,
   t: (key: string) => string,
 ): DonutChartData {
-  const legendData = data.legendData.map((item) => ({
+  const legendData = data.legendData.map(item => ({
     ...item,
     label: t(item.label),
   }));

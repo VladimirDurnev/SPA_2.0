@@ -55,7 +55,7 @@ function buildChart(
   meta: Record<string, BucketMeta>,
   totals: Record<string, number>,
 ): DonutChartData {
-  const legendData = order.map((id) => ({
+  const legendData = order.map(id => ({
     id,
     label: meta[id]?.label ?? id,
     value: totals[id] ?? 0,
@@ -64,8 +64,8 @@ function buildChart(
   }));
 
   const chartData = legendData
-    .filter((item) => item.value > 0)
-    .map((item) => ({
+    .filter(item => item.value > 0)
+    .map(item => ({
       id: item.id,
       value: item.value,
       color: item.color,
@@ -97,7 +97,7 @@ export function aggregateCriticalityChart(items: IncidentTreeNode[]): DonutChart
     unspecified: 0,
   };
 
-  walkTree(items, (node) => node.criticality ?? null, totals);
+  walkTree(items, node => node.criticality ?? null, totals);
 
   return buildChart(
     'charts.criticality.title',
@@ -122,7 +122,7 @@ export function aggregateIncidentStateChart(items: IncidentTreeNode[]): DonutCha
     sensor: 0,
   };
 
-  walkTree(items, (node) => node.incidentState ?? null, totals);
+  walkTree(items, node => node.incidentState ?? null, totals);
 
   return buildChart(
     'charts.incidentState.title',
@@ -132,12 +132,12 @@ export function aggregateIncidentStateChart(items: IncidentTreeNode[]): DonutCha
   );
 }
 
-type DurationBucketId =
-  | 'less-week'
-  | 'weeks-1-2'
-  | 'weeks-3-5'
-  | 'weeks-6-8'
-  | 'more-8';
+type DurationBucketId
+  = | 'less-week'
+    | 'weeks-1-2'
+    | 'weeks-3-5'
+    | 'weeks-6-8'
+    | 'more-8';
 
 const DURATION_META: Record<DurationBucketId, BucketMeta> = {
   'less-week': { label: 'charts.duration.lessWeek', color: '#1b5e20' },
@@ -182,7 +182,7 @@ export function aggregateDurationChart(items: IncidentTreeNode[]): DonutChartDat
 
   walkTree(
     items,
-    (node) =>
+    node =>
       node.durationDays == null ? null : durationBucket(node.durationDays),
     totals,
   );

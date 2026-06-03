@@ -59,7 +59,7 @@ export function useDonutChartSvg(
     });
 
     const pieGenerator = pie<DonutChartSegment>()
-      .value((d) => d.value)
+      .value(d => d.value)
       .sort(null)
       .padAngle(0.01);
 
@@ -72,9 +72,9 @@ export function useDonutChartSvg(
       .attr('transform', `translate(${SIZE / 2}, ${SIZE / 2})`);
 
     g.selectAll('path')
-      .data(pieGenerator(chartData.filter((d) => d.value > 0)))
+      .data(pieGenerator(chartData.filter(d => d.value > 0)))
       .join('path')
-      .attr('fill', (d) =>
+      .attr('fill', d =>
         d.data.pattern === 'hatched'
           ? `url(#hatch-${instanceId}-${d.data.id})`
           : d.data.color)

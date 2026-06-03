@@ -22,7 +22,7 @@ export function CriticalityDonutChart() {
     () => translateDonutChartData(rawData, t),
     [rawData, t, i18n.language],
   );
-  const activeFilter = useAppSelector((state) => state.incidents.criticalityFilter);
+  const activeFilter = useAppSelector(state => state.incidents.criticalityFilter);
 
   const handleLegendClick = (item: DonutChartLegendItem) => {
     const filter = item.id as CriticalityFilterValue;

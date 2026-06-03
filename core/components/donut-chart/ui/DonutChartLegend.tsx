@@ -27,7 +27,7 @@ export function DonutChartLegend({
 }: DonutChartLegendProps) {
   return (
     <Legend>
-      {items.map((item) => (
+      {items.map(item => (
         <DonutChartLegendItemRow
           key={item.id}
           item={item}

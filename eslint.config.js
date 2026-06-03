@@ -9,8 +9,12 @@ export default antfu(
     ignores: ['**/*.md'],
     react: false,
     typescript: true,
-    // Стилистика отдельно: в коде уже есть `;`, antfu по умолчанию — без `;` → сотни ложных ошибок
-    stylistic: false,
+    // В IDE и в терминале одинаковая строгость (иначе antfu смягчает часть правил в редакторе).
+    isInEditor: false,
+    // Стилистика: semi: true — как в проекте (с `;`). Без semi antfu даёт сотни ложных ошибок.
+    stylistic: {
+      semi: true,
+    },
   },
   {
     plugins: {
@@ -18,6 +22,13 @@ export default antfu(
     },
     rules: {
       'security/detect-object-injection': 'off',
+      'style/no-multi-spaces': 'error',
+    },
+  },
+  {
+    files: ['**/*.cjs'],
+    rules: {
+      'style/semi': 'off',
     },
   },
   ...appsImportRestrictions,

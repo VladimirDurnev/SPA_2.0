@@ -39,7 +39,7 @@ export function IncidentsTable() {
         bordered
         expandable={{
           expandedRowKeys,
-          onExpandedRowsChange: (keys) =>
+          onExpandedRowsChange: keys =>
             dispatch(setExpandedRowKeys(keys as string[])),
         }}
       />
