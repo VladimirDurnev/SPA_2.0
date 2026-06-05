@@ -161,3 +161,21 @@ Husky — локальный фильтр, CI — источник истины 
 - `.husky/pre-push`;
 - `package.json` — скрипты `lint`, `lint:styles`, `lint:apps-imports`, `test:run`;
 - `docs/TESTING_STRATEGY.md`.
+
+## Отписка (шаблон SPA 2)
+
+### 04.06.2026
+
+В рамках шаблона для SPA 2:
+
+- Подключил Husky: проверки только на `pre-push` (без `pre-commit`)
+- Составил документацию по hook: lint, stylelint, `lint:apps-imports`, `test:run` перед push (`docs/HUSKY.md`)
+- Составил черновой OpenAPI-контракт `docs/api/openapi.draft.yaml` (инциденты, карточка, аналитика, аномалии, оборудование, отчёты)
+
+### 03.06.2026
+
+В рамках шаблона для SPA 2:
+
+- Подключил Zod и сделали эталон валидации ответа API
+- Добавил обработку ошибок контракта API: notification Ant Design
+- Составил документацию по runtime-валидации
