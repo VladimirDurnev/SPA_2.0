@@ -1,7 +1,9 @@
+import { Buffer } from 'node:buffer';
 import { createReadStream, existsSync } from 'node:fs';
 import { access, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT_DIR = join(fileURLToPath(import.meta.url), '..', '..');
@@ -27,11 +29,6 @@ function sendFile(response, filePath) {
 
   response.writeHead(200, { 'Content-Type': contentType });
   createReadStream(filePath).pipe(response);
-}
-
-function sendNotFound(response) {
-  response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-  response.end('Not found');
 }
 
 async function proxyToMock(request, response) {
@@ -134,6 +131,6 @@ server.on('error', (error) => {
 
 server.listen(PORT, () => {
   console.log(`Swagger UI: http://localhost:${PORT}`);
-  console.log('API proxy:    unknown routes -> ' + MOCK_API_TARGET);
+  console.log(`API proxy:    unknown routes -> ${MOCK_API_TARGET}`);
   console.log('Press Ctrl+C to stop');
 });

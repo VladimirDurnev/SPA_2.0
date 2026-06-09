@@ -1,10 +1,10 @@
+import type { OpenApiAppDefinition } from './types';
 import { mkdir, writeFile } from 'node:fs/promises';
+
 import { dirname, resolve } from 'node:path';
 
 import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-
 import { registerOpenApiRoutes } from './register-routes';
-import type { OpenApiAppDefinition } from './types';
 
 const DOCS_API_DIR = resolve(import.meta.dirname, '../../docs/api');
 

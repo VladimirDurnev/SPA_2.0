@@ -1,9 +1,11 @@
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
+import type { OpenApiAppId } from './openapi/types';
 
+import process from 'node:process';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+
+import { z } from 'zod';
 import { OPENAPI_APPS } from './openapi/apps';
 import { generateOpenApiDocument } from './openapi/generate-document';
-import type { OpenApiAppId } from './openapi/types';
 
 extendZodWithOpenApi(z);
 
