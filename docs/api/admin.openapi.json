@@ -1,0 +1,19 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Kvant Detection Admin API",
+    "version": "0.1.0",
+    "description": "OpenAPI-контракт, сгенерированный из Zod-схем app-admin."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same-origin API"
+    }
+  ],
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {}
+}

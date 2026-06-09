@@ -4,10 +4,14 @@ import { z } from 'zod';
 
 // Разрешённые значения критичности из API.
 // Если бэк пришлёт, например, "critical" вместо "high" — Zod поймает ошибку.
-export const IncidentCriticalitySchema = z.enum(['high', 'medium', 'low']);
+export const IncidentCriticalitySchema = z
+  .enum(['high', 'medium', 'low'])
+  .meta({ description: 'Критичность инцидента.' });
 
 // Разрешённые значения типа/состояния инцидента из API.
-export const IncidentStateSchema = z.enum(['model', 'equipment', 'sensor']);
+export const IncidentStateSchema = z
+  .enum(['model', 'equipment', 'sensor'])
+  .meta({ description: 'Тип/состояние инцидента в дереве.' });
 
 // Схема одной строки дерева инцидентов.
 // z.lazy нужен, потому что узел может содержать children с такими же узлами.
@@ -35,6 +39,9 @@ export const IncidentTreeNodeSchema: z.ZodType<IncidentTreeNode> = z.lazy(() =>
     totalIncidents: z.number().nullable().optional(),
     assigned: z.string().nullable().optional(),
     children: z.array(IncidentTreeNodeSchema).optional(),
+  }).meta({
+    id: 'IncidentTreeNode',
+    description: 'Строка дерева инцидентов.',
   }),
 );
 
@@ -43,7 +50,7 @@ export const IncidentTreeNodeSchema: z.ZodType<IncidentTreeNode> = z.lazy(() =>
 export const IncidentsTreeResponseSchema: z.ZodType<IncidentsTreeResponse> = z.object({
   items: z.array(IncidentTreeNodeSchema),
   defaultExpandedRowKeys: z.array(z.string()),
-});
+}).meta({ description: 'Ответ GET /incidentsTree.' });
 
 // Единственная точка доверия к API-ответу.
 // До этой функции data имеет тип unknown, после успешного parse — IncidentsTreeResponse.

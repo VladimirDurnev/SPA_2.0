@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Docs — Swagger UI</title>
+    <link rel="stylesheet" href="/swagger-ui/swagger-ui.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .toolbar {
+        align-items: center;
+        background: #fafafa;
+        border-bottom: 1px solid #d9d9d9;
+        display: flex;
+        gap: 12px;
+        padding: 12px 24px;
+      }
+
+      .toolbar label {
+        font: 14px/1.4 system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <label>
+        Спецификация:
+        <select id="spec-select">
+          <option value="/api/operator.openapi.json">Operator API</option>
+          <option value="/api/admin.openapi.json">Admin API</option>
+          <option value="/api/expert.openapi.json">Expert API</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="swagger-ui"></div>
+
+    <script src="/swagger-ui/swagger-ui-bundle.js"></script>
+    <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+    <script>
+      const select = document.getElementById('spec-select');
+
+      function renderSwagger(specUrl) {
+        window.ui = SwaggerUIBundle({
+          url: specUrl,
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          layout: 'StandaloneLayout',
+        });
+      }
+
+      select.addEventListener('change', () => {
+        renderSwagger(select.value);
+      });
+
+      renderSwagger(select.value);
+    </script>
+  </body>
+</html>

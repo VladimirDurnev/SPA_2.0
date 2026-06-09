@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Kvant Detection Operator API",
+    "version": "0.1.0",
+    "description": "OpenAPI-контракт, сгенерированный из Zod-схем app-operator."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same-origin API"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "IncidentTreeNode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cmState": {
+            "type": "string",
+            "enum": [
+              "active"
+            ]
+          },
+          "criticality": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              null
+            ],
+            "description": "Критичность инцидента."
+          },
+          "incidentState": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "model",
+              "equipment",
+              "sensor",
+              null
+            ],
+            "description": "Тип/состояние инцидента в дереве."
+          },
+          "malfunction": {
+            "type": "string",
+            "nullable": true
+          },
+          "deadline": {
+            "type": "string",
+            "nullable": true
+          },
+          "durationDays": {
+            "type": "number",
+            "nullable": true
+          },
+          "totalIncidents": {
+            "type": "number",
+            "nullable": true
+          },
+          "assigned": {
+            "type": "string",
+            "nullable": true
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncidentTreeNode"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "description": "Строка дерева инцидентов."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/incidentsTree": {
+      "get": {
+        "tags": [
+          "Incidents"
+        ],
+        "summary": "Получить дерево инцидентов",
+        "description": "Возвращает строки дерева инцидентов и ключи раскрытия строк по умолчанию.",
+        "operationId": "getIncidentsTree",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ],
+              "description": "Фильтр дерева по критичности инцидента."
+            },
+            "required": false,
+            "description": "Фильтр дерева по критичности инцидента.",
+            "name": "criticality",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Дерево инцидентов.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IncidentTreeNode"
+                      }
+                    },
+                    "defaultExpandedRowKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "defaultExpandedRowKeys"
+                  ],
+                  "description": "Ответ GET /incidentsTree."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
