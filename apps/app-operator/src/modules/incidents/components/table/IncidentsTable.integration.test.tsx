@@ -9,54 +9,45 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { INCIDENTS_ROOT_PARENT_ID } from '../../constants';
 import { incidentsI18nResources } from '../../locales';
 import { incidentsReducer } from '../../store/incidentsSlice';
 import { IncidentsTable } from './IncidentsTable';
 
 import '@testing-library/jest-dom/vitest';
 
-// Моковое состояние имитирует уже загруженные инциденты в Redux.
-// API здесь не вызываем: проверяем связку store -> компонент -> действие пользователя.
 const incidentsState: IncidentsState = {
-  allItems: [
-    {
-      id: 'block-1',
-      name: 'Блок 1',
-      children: [
-        {
-          id: 'tg-1',
-          name: 'ТГ-1',
-          criticality: 'high',
-          incidentState: 'model',
-          totalIncidents: 3,
-        },
-      ],
+  nodes: {
+    'r-0': { id: 'r-0', name: 'АЗС 1', hasChildren: true, cmState: 'active' },
+    'r-0-c0': { id: 'r-0-c0', name: 'Блок 1.1', hasChildren: false, criticality: 'high' },
+  },
+  pagesByParent: {
+    [INCIDENTS_ROOT_PARENT_ID]: {
+      0: [{ id: 'r-0', name: 'АЗС 1', hasChildren: true, cmState: 'active' }],
     },
-  ],
-  items: [
-    {
-      id: 'block-1',
-      name: 'Блок 1',
-      children: [
-        {
-          id: 'tg-1',
-          name: 'ТГ-1',
-          criticality: 'high',
-          incidentState: 'model',
-          totalIncidents: 3,
-        },
-      ],
+    'r-0': {
+      0: [{ id: 'r-0-c0', name: 'Блок 1.1', hasChildren: false, criticality: 'high' }],
     },
-  ],
+  },
+  pageMetaByParent: {
+    [INCIDENTS_ROOT_PARENT_ID]: { total: 2, loadedRanges: [{ offset: 0, limit: 100 }] },
+    'r-0': { total: 1, loadedRanges: [{ offset: 0, limit: 100 }] },
+  },
+  nodeMeta: {
+    'r-0': { hasChildren: true },
+    'r-0-c0': { hasChildren: false },
+  },
+  expandedIds: ['r-0'],
+  filteredItems: [],
+  tableMode: 'lazy',
+  aggregates: null,
   criticalityFilter: null,
-  expandedRowKeys: ['block-1'],
   isLoading: false,
+  isTableInitialized: true,
   error: null,
 };
 
 function createIncidentsTestStore() {
-  // Создаём настоящий Redux store, но с тестовым preloadedState.
-  // Поэтому reducer и dispatch работают как в приложении, без моков функций.
   return configureStore({
     reducer: {
       incidents: incidentsReducer,
@@ -70,8 +61,6 @@ function createIncidentsTestStore() {
 function renderIncidentsTable() {
   const store = createIncidentsTestStore();
 
-  // Рендерим компонент в той же обвязке, которая нужна ему в приложении:
-  // Redux Provider, i18n и theme/Ant Design providers.
   const view = render(
     <Provider store={store}>
       <AppI18nProvider modules={[incidentsI18nResources]}>
@@ -86,8 +75,6 @@ function renderIncidentsTable() {
 }
 
 beforeAll(() => {
-  // Ant Design использует browser API, которых нет в jsdom.
-  // Добавляем минимальные заглушки, чтобы тест мог рендерить таблицу.
   const getComputedStyle = window.getComputedStyle;
 
   class ResizeObserverMock implements ResizeObserver {
@@ -115,26 +102,19 @@ afterEach(() => {
 });
 
 describe('incidents table integration', () => {
-  it('renders incidents from Redux store and updates expanded rows on collapse', async () => {
+  it('renders lazy rows and collapses expanded node', async () => {
     const user = userEvent.setup();
-    const { container, store } = renderIncidentsTable();
+    renderIncidentsTable();
 
-    // Данные берутся из Redux store и отображаются в таблице.
     expect(await screen.findByText('Список инцидентов')).toBeInTheDocument();
-    expect(screen.getByText('Блок 1')).toBeInTheDocument();
-    expect(screen.getByText('ТГ-1')).toBeInTheDocument();
+    expect(screen.getByText('АЗС 1')).toBeInTheDocument();
+    expect(screen.getByText('Блок 1.1')).toBeInTheDocument();
 
-    // Кликаем по реальной кнопке раскрытия строки Ant Design Table.
-    const expandButton = container.querySelector<HTMLButtonElement>('.ant-table-row-expand-icon');
+    const expandButton = screen.getByRole('button', { name: 'Collapse' });
+    await user.click(expandButton);
 
-    expect(expandButton).not.toBeNull();
-    await user.click(expandButton!);
-
-    // Проверяем результат интеграции: UI-событие вызвало dispatch,
-    // reducer обновил Redux state, а дочерняя строка пропала из DOM.
     await waitFor(() => {
-      expect(store.getState().incidents.expandedRowKeys).toEqual([]);
+      expect(screen.queryByText('Блок 1.1')).not.toBeInTheDocument();
     });
-    expect(screen.queryByText('ТГ-1')).not.toBeInTheDocument();
   });
 });

@@ -171,6 +171,39 @@ function durationBucket(days: number): DurationBucketId {
   return 'more-8';
 }
 
+export function criticalityChartFromAggregates(
+  totals: Record<string, number>,
+): DonutChartData {
+  return buildChart(
+    'charts.criticality.title',
+    CRITICALITY_ORDER,
+    CRITICALITY_META,
+    totals,
+  );
+}
+
+export function incidentStateChartFromAggregates(
+  totals: Record<string, number>,
+): DonutChartData {
+  return buildChart(
+    'charts.incidentState.title',
+    INCIDENT_STATE_ORDER,
+    INCIDENT_STATE_META,
+    totals,
+  );
+}
+
+export function durationChartFromAggregates(
+  totals: Record<string, number>,
+): DonutChartData {
+  return buildChart(
+    'charts.duration.title',
+    DURATION_ORDER,
+    DURATION_META,
+    totals,
+  );
+}
+
 export function aggregateDurationChart(items: IncidentTreeNode[]): DonutChartData {
   const totals: Record<string, number> = {
     'less-week': 0,

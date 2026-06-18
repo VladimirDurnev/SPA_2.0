@@ -3,12 +3,12 @@
   "info": {
     "title": "Kvant Detection Operator API",
     "version": "0.1.0",
-    "description": "OpenAPI-контракт, сгенерированный из Zod-схем app-operator."
+    "description": "Контракт API оператора: собран из Zod-схем фронтенда (npm run openapi:build)."
   },
   "servers": [
     {
       "url": "/",
-      "description": "Same-origin API"
+      "description": "Тот же хост, что и фронтенд"
     }
   ],
   "components": {
@@ -82,6 +82,74 @@
           "name"
         ],
         "description": "Строка дерева инцидентов."
+      },
+      "IncidentTreeNodeSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "hasChildren": {
+            "type": "boolean"
+          },
+          "cmState": {
+            "type": "string",
+            "enum": [
+              "active"
+            ]
+          },
+          "criticality": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              null
+            ],
+            "description": "Критичность инцидента."
+          },
+          "incidentState": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "model",
+              "equipment",
+              "sensor",
+              null
+            ],
+            "description": "Тип/состояние инцидента в дереве."
+          },
+          "malfunction": {
+            "type": "string",
+            "nullable": true
+          },
+          "deadline": {
+            "type": "string",
+            "nullable": true
+          },
+          "durationDays": {
+            "type": "number",
+            "nullable": true
+          },
+          "totalIncidents": {
+            "type": "number",
+            "nullable": true
+          },
+          "assigned": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "hasChildren"
+        ],
+        "description": "Узел дерева для lazy API."
       }
     },
     "parameters": {}
@@ -138,6 +206,142 @@
                     "defaultExpandedRowKeys"
                   ],
                   "description": "Ответ GET /incidentsTree."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/incidentsTree/nodes": {
+      "get": {
+        "tags": [
+          "Incidents"
+        ],
+        "summary": "Получить диапазон дочерних узлов",
+        "operationId": "getIncidentTreeNodes",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "ID родителя, чьих прямых детей запрашиваем. Не передавать — корневой уровень (АЗС). Пример: `r-0`."
+            },
+            "required": false,
+            "description": "ID родителя, чьих прямых детей запрашиваем. Не передавать — корневой уровень (АЗС). Пример: `r-0`.",
+            "name": "parentId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "number",
+              "nullable": true,
+              "description": "Смещение среди детей родителя (с нуля). Для таблицы кратно размеру chunk (0, 100, 200…)."
+            },
+            "required": false,
+            "description": "Смещение среди детей родителя (с нуля). Для таблицы кратно размеру chunk (0, 100, 200…).",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "number",
+              "nullable": true,
+              "description": "Сколько узлов вернуть за один запрос. В приложении — 100."
+            },
+            "required": false,
+            "description": "Сколько узлов вернуть за один запрос. В приложении — 100.",
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Диапазон дочерних узлов.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parentId": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "offset": {
+                      "type": "number"
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IncidentTreeNodeSummary"
+                      }
+                    }
+                  },
+                  "required": [
+                    "parentId",
+                    "offset",
+                    "limit",
+                    "total",
+                    "items"
+                  ],
+                  "description": "Ответ GET /incidentsTree/nodes."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/incidentsTree/aggregates": {
+      "get": {
+        "tags": [
+          "Incidents"
+        ],
+        "summary": "Агрегаты для donut-графиков на странице инцидентов",
+        "description": "Сводные счётчики по всему дереву: критичность, состояние и длительность. Используются тремя бубликами над таблицей; не связан с lazy-загрузкой строк.",
+        "operationId": "getIncidentsAggregates",
+        "responses": {
+          "200": {
+            "description": "Данные для donut-графиков (критичность, состояние, длительность).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalNodes": {
+                      "type": "number"
+                    },
+                    "criticality": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "incidentState": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "duration": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": [
+                    "totalNodes",
+                    "criticality",
+                    "incidentState",
+                    "duration"
+                  ],
+                  "description": "Ответ GET /incidentsTree/aggregates — данные для donut-графиков на /incidents."
                 }
               }
             }

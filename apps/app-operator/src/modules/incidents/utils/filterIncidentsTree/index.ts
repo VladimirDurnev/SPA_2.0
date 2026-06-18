@@ -27,23 +27,23 @@ export function filterTreeByCriticality(
   nodes: IncidentTreeNode[],
   filter: CriticalityFilterValue,
 ): IncidentTreeNode[] {
-  return nodes.reduce<IncidentTreeNode[]>((acc, node) => {
-    const filteredChildren = node.children
-      ? filterTreeByCriticality(node.children, filter)
+  return nodes.reduce<IncidentTreeNode[]>((matchingNodes, treeNode) => {
+    const filteredChildren = treeNode.children
+      ? filterTreeByCriticality(treeNode.children, filter)
       : undefined;
 
     const keep
-      = nodeMatches(node, filter)
+      = nodeMatches(treeNode, filter)
         || Boolean(filteredChildren?.length);
 
     if (!keep) {
-      return acc;
+      return matchingNodes;
     }
 
-    acc.push({
-      ...node,
+    matchingNodes.push({
+      ...treeNode,
       children: filteredChildren?.length ? filteredChildren : undefined,
     });
-    return acc;
+    return matchingNodes;
   }, []);
 }

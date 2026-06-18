@@ -8,7 +8,8 @@ import { registerOpenApiRoutes } from './register-routes';
 
 const DOCS_API_DIR = resolve(import.meta.dirname, '../../docs/api');
 
-export async function generateOpenApiDocument(app: OpenApiAppDefinition): Promise<string> {
+/** Собирает OpenAPI 3 JSON из Zod-маршрутов приложения и записывает в docs/api/. */
+export async function writeOpenApiJson(app: OpenApiAppDefinition): Promise<string> {
   const registry = new OpenAPIRegistry();
   const routes = await app.loadRoutes();
 
@@ -25,7 +26,7 @@ export async function generateOpenApiDocument(app: OpenApiAppDefinition): Promis
     servers: [
       {
         url: '/',
-        description: 'Same-origin API',
+        description: 'Тот же хост, что и фронтенд',
       },
     ],
   });

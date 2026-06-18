@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "openapi:generate": "npm run openapi:generate:expert --prefix ../..",
+    "openapi:build": "npm run openapi:build:expert --prefix ../..",
     "preview": "vite preview",
     "test": "vitest"
   },

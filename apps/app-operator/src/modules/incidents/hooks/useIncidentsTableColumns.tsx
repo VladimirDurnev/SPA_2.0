@@ -1,5 +1,5 @@
 import type { TableColumnsType } from '@org/core';
-import type { IncidentTreeNode } from '../types';
+import type { IncidentTableRow } from '../types';
 import { useTranslation } from '@org/core';
 
 import { useMemo } from 'react';
@@ -10,76 +10,98 @@ import {
   MalfunctionText,
   RowActions,
 } from '../components/cellRenderers';
+import { NameCell } from '../components/table/NameCell';
+import { INCIDENTS_TABLE_COLUMN_WIDTHS } from '../constants';
+import { isPlaceholderRow } from '../types';
 
-export function useIncidentsTableColumns(): TableColumnsType<IncidentTreeNode> {
+export function useIncidentsTableColumns(): TableColumnsType<IncidentTableRow> {
   const { t } = useTranslation('incidents');
 
   return useMemo(
     () => [
       {
         title: t('table.columns.name'),
-        dataIndex: 'name',
         key: 'name',
-        width: 280,
+        dataIndex: 'name',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.name,
         ellipsis: true,
+        render: (_, record) => <NameCell row={record} />,
       },
       {
         title: t('table.columns.cmState'),
         key: 'cmState',
-        width: 110,
+        dataIndex: 'cmState',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.cmState,
         align: 'center',
-        render: (_, record) => (record.cmState ? <CmStateIndicator /> : null),
+        render: (_, record) =>
+          !isPlaceholderRow(record) && record.cmState ? <CmStateIndicator /> : null,
       },
       {
         title: t('table.columns.criticality'),
         key: 'criticality',
-        width: 170,
+        dataIndex: 'criticality',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.criticality,
         render: (_, record) =>
-          record.criticality ? <CriticalityBadge value={record.criticality} /> : null,
+          !isPlaceholderRow(record) && record.criticality
+            ? <CriticalityBadge value={record.criticality} />
+            : null,
       },
       {
         title: t('table.columns.incidentState'),
         key: 'incidentState',
-        width: 180,
+        dataIndex: 'incidentState',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.incidentState,
         render: (_, record) =>
-          record.incidentState ? <IncidentStateBadge value={record.incidentState} /> : null,
+          !isPlaceholderRow(record) && record.incidentState
+            ? <IncidentStateBadge value={record.incidentState} />
+            : null,
       },
       {
         title: t('table.columns.malfunction'),
-        dataIndex: 'malfunction',
         key: 'malfunction',
-        width: 220,
+        dataIndex: 'malfunction',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.malfunction,
         ellipsis: true,
-        render: (value: string | null) =>
-          value ? <MalfunctionText value={value} /> : null,
+        render: (_, record) =>
+          !isPlaceholderRow(record) && record.malfunction
+            ? <MalfunctionText value={record.malfunction} />
+            : null,
       },
       {
         title: t('table.columns.deadline'),
-        dataIndex: 'deadline',
         key: 'deadline',
-        width: 160,
+        dataIndex: 'deadline',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.deadline,
+        render: (_, record) =>
+          !isPlaceholderRow(record) ? record.deadline : null,
       },
       {
         title: t('table.columns.durationDays'),
-        dataIndex: 'durationDays',
         key: 'durationDays',
-        width: 150,
+        dataIndex: 'durationDays',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.durationDays,
         align: 'center',
+        render: (_, record) =>
+          !isPlaceholderRow(record) ? record.durationDays : null,
       },
       {
         title: t('table.columns.totalIncidents'),
-        dataIndex: 'totalIncidents',
         key: 'totalIncidents',
-        width: 130,
+        dataIndex: 'totalIncidents',
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.totalIncidents,
         align: 'center',
+        render: (_, record) =>
+          !isPlaceholderRow(record) ? record.totalIncidents : null,
       },
       {
         title: t('table.columns.assigned'),
         key: 'assigned',
-        width: 100,
+        width: INCIDENTS_TABLE_COLUMN_WIDTHS.assigned,
         align: 'center',
         render: (_, record) =>
-          record.malfunction || record.deadline ? <RowActions /> : null,
+          !isPlaceholderRow(record) && (record.malfunction || record.deadline)
+            ? <RowActions />
+            : null,
       },
     ],
     [t],

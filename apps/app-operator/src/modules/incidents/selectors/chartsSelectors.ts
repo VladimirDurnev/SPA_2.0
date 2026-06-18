@@ -1,40 +1,60 @@
+/**
+ * Селекторы donut-графиков. Данные из `aggregates` (GET /aggregates), не из дерева таблицы.
+ */
+import type { DonutChartData } from '@org/core';
 import type { RootState } from '@/app/store/types';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
-  aggregateCriticalityChart,
-  aggregateDurationChart,
-  aggregateIncidentStateChart,
+  criticalityChartFromAggregates,
+  durationChartFromAggregates,
+  incidentStateChartFromAggregates,
 } from '../utils/aggregateCharts';
 
-const selectAllItems = (state: RootState) => state.incidents.allItems;
-const selectItems = (state: RootState) => state.incidents.items;
+const EMPTY_CHART: DonutChartData = {
+  title: '',
+  chartData: [],
+  legendData: [],
+};
+
+const selectAggregates = (state: RootState) => state.incidents.aggregates;
 const selectIsLoading = (state: RootState) => state.incidents.isLoading;
 
-/** Полное дерево для бубликов (не отфильтрованная таблица) */
-const selectTreeForCharts = createSelector(
-  selectAllItems,
-  selectItems,
-  (allItems, items) => (allItems.length > 0 ? allItems : items),
-);
-
 export const selectChartsReady = createSelector(
-  selectTreeForCharts,
+  selectAggregates,
   selectIsLoading,
-  (tree, isLoading) => tree.length > 0 && !isLoading,
+  (aggregates, isLoading) => aggregates != null && !isLoading,
 );
 
 export const selectCriticalityChartData = createSelector(
-  selectTreeForCharts,
-  aggregateCriticalityChart,
+  selectAggregates,
+  (aggregates) => {
+    if (!aggregates) {
+      return EMPTY_CHART;
+    }
+
+    return criticalityChartFromAggregates(aggregates.criticality);
+  },
 );
 
 export const selectIncidentStateChartData = createSelector(
-  selectTreeForCharts,
-  aggregateIncidentStateChart,
+  selectAggregates,
+  (aggregates) => {
+    if (!aggregates) {
+      return EMPTY_CHART;
+    }
+
+    return incidentStateChartFromAggregates(aggregates.incidentState);
+  },
 );
 
 export const selectDurationChartData = createSelector(
-  selectTreeForCharts,
-  aggregateDurationChart,
+  selectAggregates,
+  (aggregates) => {
+    if (!aggregates) {
+      return EMPTY_CHART;
+    }
+
+    return durationChartFromAggregates(aggregates.duration);
+  },
 );

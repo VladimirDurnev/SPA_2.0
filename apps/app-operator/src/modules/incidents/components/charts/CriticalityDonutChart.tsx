@@ -5,7 +5,10 @@ import { DonutChart, useTranslation } from '@org/core';
 import { useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { fetchIncidentsByCriticalityThunk } from '../../api/incidentsThunks';
+import {
+  fetchIncidentsByCriticalityThunk,
+  initIncidentsTableThunk,
+} from '../../api/incidentsThunks';
 import {
   selectChartsReady,
   selectCriticalityChartData,
@@ -29,6 +32,7 @@ export function CriticalityDonutChart() {
 
     if (activeFilter === filter) {
       dispatch(clearCriticalityFilter());
+      void dispatch(initIncidentsTableThunk());
       return;
     }
 

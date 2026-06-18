@@ -3,12 +3,12 @@
   "info": {
     "title": "Kvant Detection Admin API",
     "version": "0.1.0",
-    "description": "OpenAPI-контракт, сгенерированный из Zod-схем app-admin."
+    "description": "Контракт API админки: собран из Zod-схем фронтенда (npm run openapi:build)."
   },
   "servers": [
     {
       "url": "/",
-      "description": "Same-origin API"
+      "description": "Тот же хост, что и фронтенд"
     }
   ],
   "components": {

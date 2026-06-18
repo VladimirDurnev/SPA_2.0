@@ -23,6 +23,8 @@ export default antfu(
     rules: {
       'security/detect-object-injection': 'off',
       'style/no-multi-spaces': 'error',
+      // Стрелочные export const для селекторов и простых хелперов
+      'antfu/top-level-function': 'off',
     },
   },
   {

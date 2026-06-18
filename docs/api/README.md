@@ -6,13 +6,13 @@
 
 В проекте **один источник правды — Zod-схемы** в коде приложений.
 
-Из них генерируются JSON-файлы OpenAPI. Swagger UI **не знает про Zod** — он читает только готовые `.json` из `docs/api/`.
+Из них **собираются** JSON-файлы OpenAPI. Swagger UI **не знает про Zod** — он читает только готовые `.json` из `docs/api/`.
 
 ```mermaid
 flowchart LR
   A[Zod-схемы<br/>*Schemas.ts] --> B[Описание HTTP<br/>*.openapi.ts]
   B --> C[Агрегатор<br/>src/openapi/index.ts]
-  C --> D[Генератор<br/>scripts/generate-openapi.ts]
+  C --> D[Скрипт сборки<br/>scripts/build-openapi.ts]
   D --> E[docs/api/*.openapi.json]
   E --> F[Swagger UI<br/>npm run swagger:ui]
   F --> G[Try it out → mock API<br/>localhost:3001]
@@ -27,7 +27,7 @@ flowchart LR
 | Zod-схемы данных | `apps/<app>/src/modules/.../*Schemas.ts` | Валидация ответов API в рантайме |
 | Описание эндпоинтов | `apps/<app>/src/modules/.../*.openapi.ts` | Метод, URL, query, response |
 | Список маршрутов приложения | `apps/<app>/src/openapi/index.ts` | Собирает все `*.openapi.ts` модуля |
-| Генератор | `scripts/generate-openapi.ts` | Собирает JSON для каждого приложения |
+| Скрипт сборки | `scripts/build-openapi.ts` | Пишет JSON-спеки в `docs/api/` |
 | Спеки | `docs/api/operator.openapi.json` и т.д. | Готовый контракт для Swagger / бэка |
 | Swagger UI | `docs/swagger/index.html` + `scripts/serve-swagger.mjs` | Локальный просмотрщик (не в билде приложения) |
 
@@ -51,22 +51,22 @@ flowchart LR
 
 При **Try it out** Swagger шлёт запрос, например `GET /incidentsTree`. Если такого статического файла нет, `serve-swagger.mjs` **проксирует** запрос на mock API (`http://localhost:3001`).
 
-Итого: Swagger читает **сгенерированные JSON**, а живые запросы идут на **mock-сервер**.
+Итого: Swagger читает **готовые JSON-спеки** из `docs/api/`, а живые запросы идут на **mock-сервер**.
 
 ---
 
 ## Быстрый старт
 
-### 1. Сгенерировать OpenAPI из схем
+### 1. Собрать OpenAPI-спеку из Zod-схем
 
 Из корня репозитория:
 
 ```bash
 # все 3 приложения
-npm run openapi:generate
+npm run openapi:build
 
 # только operator
-npm run openapi:generate:operator
+npm run openapi:build:operator
 ```
 
 Результат:
@@ -100,7 +100,7 @@ $env:SWAGGER_PORT=5180; npm run swagger:ui
 ### 3. Собрать статику для отдельного деплоя
 
 ```bash
-npm run openapi:generate
+npm run openapi:build
 npm run swagger:build
 ```
 
@@ -126,7 +126,7 @@ export const UserSchema = z.object({
 export const UsersListResponseSchema = z.array(UserSchema);
 ```
 
-Схема используется и для `parse()` в коде, и для генерации OpenAPI.
+Схема используется и для `parse()` в коде, и для сборки OpenAPI-спеки.
 
 ### Шаг 2. Описание HTTP (`*.openapi.ts`)
 
@@ -175,10 +175,10 @@ export const openApiRoutes = [
 ];
 ```
 
-### Шаг 4. Перегенерировать и проверить
+### Шаг 4. Пересобрать спеку и проверить
 
 ```bash
-npm run openapi:generate:operator
+npm run openapi:build:operator
 npm run swagger:ui
 ```
 
@@ -202,7 +202,7 @@ export const IncidentTreeNodeSchema = z.lazy(() =>
 );
 ```
 
-В сгенерированном JSON появится `$ref` на `#/components/schemas/IncidentTreeNode` — это нормально.
+В JSON-спеке появится `$ref` на `#/components/schemas/IncidentTreeNode` — это нормально.
 
 ---
 
@@ -210,10 +210,10 @@ export const IncidentTreeNodeSchema = z.lazy(() =>
 
 | Команда | Что делает |
 |---------|------------|
-| `openapi:generate` | Генерирует JSON для operator, admin, expert |
-| `openapi:generate:operator` | Только operator |
-| `openapi:generate:admin` | Только admin |
-| `openapi:generate:expert` | Только expert |
+| `openapi:build` | Собирает JSON-спеки для operator, admin, expert |
+| `openapi:build:operator` | Только operator |
+| `openapi:build:admin` | Только admin |
+| `openapi:build:expert` | Только expert |
 | `swagger:ui` | Локальный Swagger на :5179 |
 | `swagger:build` | Статический сайт в `docs/swagger/dist` |
 | `mock:server` | Mock API на :3001 для Try it out |
@@ -229,10 +229,10 @@ export const IncidentTreeNodeSchema = z.lazy(() =>
 Поднимите `npm run mock:server`. Без него прокси на :3001 не ответит.
 
 **Изменил схему, в Swagger старое**  
-Сначала `npm run openapi:generate`, потом обновите страницу Swagger (F5).
+Сначала `npm run openapi:build`, потом обновите страницу Swagger (F5).
 
 **Пользователи увидят Swagger в проде?**  
 Нет. Swagger вынесен из приложений в отдельный `docs/swagger/`.
 
 **Чем это отличается от `openapi.draft.yaml`?**  
-`openapi.draft.yaml` — ручной черновик по макетам. `docs/api/*.openapi.json` — автогенерация из реальных Zod-схем фронта.
+`openapi.draft.yaml` — ручной черновик по макетам. `docs/api/*.openapi.json` — сборка из реальных Zod-схем фронтенда (`npm run openapi:build`).

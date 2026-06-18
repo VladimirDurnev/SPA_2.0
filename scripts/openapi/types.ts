@@ -13,7 +13,7 @@ export interface OpenApiRequestDefinition {
   body?: z.ZodType;
 }
 
-/** Описание одного HTTP-эндпоинта для генерации OpenAPI из Zod-схем. */
+/** Описание одного HTTP-эндпоинта для сборки OpenAPI-спеки из Zod-схем. */
 export interface OpenApiRouteDefinition {
   method: OpenApiHttpMethod;
   path: string;
